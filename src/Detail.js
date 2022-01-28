@@ -21,6 +21,24 @@ function Detail(props) {
   let [input, inputChange] = useState('');
   let [clickTap, clickTapChange] = useState(0);
   let [swich, swichChange] = useState(false);
+  let { id } = useParams();
+  let history = useHistory();
+
+  useEffect(() => {
+    var arr = localStorage.getItem('watched');
+    if (arr == null) {
+      arr = [];
+    } else {
+      arr = JSON.parse(arr);
+    }
+
+    arr.push(id);
+    arr = new Set(arr);
+    console.log(arr);
+    arr = [...arr];
+
+    localStorage.setItem('watched', JSON.stringify(arr));
+  });
 
   let stock = useContext(stockContext);
 
@@ -33,10 +51,7 @@ function Detail(props) {
     };
   }, []);
 
-  let { id } = useParams();
-  let history = useHistory();
   let findPd = props.shoes.find(pd => pd.id == id);
-  console.log(findPd);
   return (
     <div className='container'>
       <박스>

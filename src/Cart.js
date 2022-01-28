@@ -1,8 +1,11 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 function Cart(props) {
+  let state = useSelector(state => state);
+  let dispatch = useDispatch();
+
   return (
     <div>
       <div>
@@ -16,7 +19,7 @@ function Cart(props) {
             </tr>
           </thead>
           <tbody>
-            {props.state.map((item, idx) => {
+            {state.reducer.map((item, idx) => {
               return (
                 <tr key={idx}>
                   <td>{item.id}</td>
@@ -25,9 +28,9 @@ function Cart(props) {
                   <td>
                     <button
                       onClick={() => {
-                        props.dispatch({
+                        dispatch({
                           type: '수량증가',
-                          payload: { name: 'kim' },
+                          payload: item.id,
                         });
                       }}
                     >
@@ -35,7 +38,10 @@ function Cart(props) {
                     </button>
                     <button
                       onClick={() => {
-                        props.dispatch({ type: '수량감소' });
+                        dispatch({
+                          type: '수량감소',
+                          payload: item.id,
+                        });
                       }}
                     >
                       -
@@ -51,7 +57,7 @@ function Cart(props) {
             <p>지금 구매하시면 신규할인 20%</p>
             <button
               onClick={() => {
-                props.dispatch({ type: 'alert닫기' });
+                dispatch({ type: 'alert닫기' });
               }}
             >
               닫기
@@ -62,12 +68,12 @@ function Cart(props) {
     </div>
   );
 }
-function state를props화(state) {
-  return {
-    state: state.reducer,
-    alertOpen: state.reducer2,
-  };
-}
-export default connect(state를props화)(Cart);
+// function state를props화(state) {
+//   return {
+//     state: state.reducer,
+//     alertOpen: state.reducer2,
+//   };
+// }
+// export default connect(state를props화)(Cart);
 
-// export default Cart;
+export default Cart;

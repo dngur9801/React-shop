@@ -1,12 +1,13 @@
 import { Navbar, Container, Nav, NavDropdown, Modal } from 'react-bootstrap';
 import './App.css';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, lazy, Suspense } from 'react';
 import Data from './data.js';
-import Detail from './Detail.js';
+// import Detail from './Detail.js';
 import Cart from './Cart.js';
 import axios from 'axios';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
 
+let Detail = lazy(() => import('./Detail.js'));
 export let stockContext = React.createContext();
 
 function App() {
@@ -93,7 +94,9 @@ function App() {
 
         <Route path='/detail/:id'>
           <stockContext.Provider value={stock}>
-            <Detail shoes={shoes} stock={stock} stockChange={stockChange} />
+            <Suspense fallback={<div>로딩중이에요</div>}>
+              <Detail shoes={shoes} stock={stock} stockChange={stockChange} />
+            </Suspense>
           </stockContext.Provider>
         </Route>
 
@@ -111,9 +114,15 @@ function App() {
 
 function Product(props) {
   let stock = useContext(stockContext);
+  let history = useHistory();
 
   return (
-    <div className='col-md-4'>
+    <div
+      className='col-md-4'
+      onClick={() => {
+        history.push('/detail/' + props.shoes.id);
+      }}
+    >
       <img
         src={
           'https://codingapple1.github.io/shop/shoes' + (props.idx + 1) + '.jpg'
@@ -132,6 +141,6 @@ function Product(props) {
 function Test() {
   let stock = useContext(stockContext);
 
-  return <p>재고: {stock}</p>;
+  return <p>재고: {stock[0]}</p>;
 }
 export default App;
